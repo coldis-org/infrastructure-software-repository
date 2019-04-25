@@ -1,0 +1,42 @@
+{
+	"id": "software-repository-service",
+	"container": {
+		"portMappings": [
+			{
+				"containerPort": 8081,
+				"labels": {
+					"VIP_0": "/software-repository-service:8081"
+				}
+			}
+		],
+		"type": "MESOS",
+		"volumes": [
+			{
+				"containerPath": "persistent-data",
+				"mode": "RW",
+				"external": {
+					"size": 128,
+					"name": "software-repository-service-data",
+					"provider": "dvdi",
+					"options": {
+						"dvdi/driver": "rexray"
+					}
+				}
+			}
+		],
+		"docker": {
+			"image": "coldis/software-repository-service",
+			"forcePullImage": true
+		}
+	},
+	"args": [],
+	"cpus": 0.5,
+	"disk": 1024,
+	"instances": 1,
+	"mem": 2048,
+	"networks": [
+		{
+			"mode": "container/bridge"
+		}
+	]
+}
