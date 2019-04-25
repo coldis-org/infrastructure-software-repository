@@ -1,0 +1,11 @@
+{
+	"container": {
+		"docker": {
+			"image": "software-repository"
+		}
+	},
+	"cpus": 1,
+	"disk": 1024,
+	"instances": 1,
+	"mem": 2048
+}

@@ -1,0 +1,71 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.coldis</groupId>
+		<artifactId>common-config</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<groupId>org.coldis.infrastructure</groupId>
+	<artifactId>software-repository</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>Software repository</name>
+
+	<properties>
+
+		<project.config.assembly.phase>package</project.config.assembly.phase>
+		<project.config.assembly.descriptors>infrastructure/service/distribution.xml</project.config.assembly.descriptors>
+
+		<nx-version>3.9.0-01</nx-version>
+
+	</properties>
+
+	<scm>
+		<url>https://github.com/coldis-org/infrastructure-software-repository</url>
+		<connection>scm:git:https://github.com/coldis-org/infrastructure-software-repository.git</connection>
+		<developerConnection>scm:git:git@github.com:coldis-org/infrastructure-software-repository.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.sonatype.nexus</groupId>
+			<artifactId>nexus-core</artifactId>
+			<version>${nx-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sonatype.nexus</groupId>
+			<artifactId>nexus-script</artifactId>
+			<version>${nx-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sonatype.nexus</groupId>
+			<artifactId>nexus-security</artifactId>
+			<version>${nx-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sonatype.nexus</groupId>
+			<artifactId>nexus-repository</artifactId>
+			<version>${nx-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sonatype.nexus.plugins</groupId>
+			<artifactId>nexus-repository-maven</artifactId>
+			<version>${nx-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sonatype.nexus.plugins</groupId>
+			<artifactId>nexus-script-plugin</artifactId>
+			<version>${nx-version}</version>
+		</dependency>
+
+	</dependencies>
+
+</project>
