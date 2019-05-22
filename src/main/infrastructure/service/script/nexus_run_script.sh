@@ -9,7 +9,7 @@ DEBUG=false
 DEBUG_OPT=
 
 # Default paramentes.
-SCRIPT_DIRECTORY=/opt/nexus_script
+NEXUS_SCRIPT=/opt/nexus-script
 HOST=http://localhost:8081
 USERNAME=admin
 PASSWORD=admin123
@@ -74,7 +74,7 @@ ${DEBUG} && echo  "SCRIPT_NAME=${SCRIPT_NAME}"
 ${DEBUG} && echo  "SCRIPT_FILE=${SCRIPT_FILE}"
 
 # Creates the script.
-groovy -Dgroovy.grape.report.downloads=true -Dgrape.config=${SCRIPT_DIRECTORY}/grapeConfig.xml ${SCRIPT_DIRECTORY}/addUpdateScript.groovy -u "${USERNAME}" -p "${PASSWORD}" -n "${SCRIPT_NAME}" -f "${SCRIPT_FILE}" -h "${HOST}"
+groovy -Dgroovy.grape.report.downloads=true -Dgrape.config=${NEXUS_SCRIPT}/nexusGrapeConfig.xml ${NEXUS_SCRIPT}/groovy/nexusAddUpdateScript.groovy -u "${USERNAME}" -p "${PASSWORD}" -n "${SCRIPT_NAME}" -f "${SCRIPT_FILE}" -h "${HOST}"
 ${DEBUG} && printf "\nPublished ${SCRIPT_FILE} as ${SCRIPT_NAME}\n\n"
 
 # Runs the script.

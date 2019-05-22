@@ -5,11 +5,18 @@ set -o errexit
 #set -o pipefail
 
 # Debug is disabled by default.
-DEBUG=false
-DEBUG_OPT=
+if ${DEBUG}
+then
+	DEBUG=true
+	DEBUG_OPT=--debug
+else 
+	DEBUG=false
+	DEBUG_OPT=
+fi
 
 # Default parameters.
-STARTUP_WAIT=90
+NEXUS_SCRIPT=/opt/nexus-script
+STARTUP_WAIT=180
 
 # For each argument.
 while :; do
@@ -53,6 +60,7 @@ ${DEBUG} && echo  "Running 'nexus_init'"
 set -m
 
 # Executes the init script in the background.
+${DEBUG} && echo "Nexus data at ${NEXUS_DATA}"
 ${DEBUG} && echo "${SONATYPE_DIR}/start-nexus-repository-manager.sh &"
 exec ${SONATYPE_DIR}/start-nexus-repository-manager.sh &
 
@@ -63,7 +71,8 @@ then
 	# Startup wait.
 	sleep ${STARTUP_WAIT}
 	# Configures the repositories.
-	nexus_run_script -n repositories -f /opt/nexus-script/repositories.groovy ${DEBUG_OPT}
+	nexus_run_script ${DEBUG_OPT} -n nexusConfigureRepositories -f ${NEXUS_SCRIPT}/groovy/nexusConfigureRepositories.groovy
+	${DEBUG} && echo "Repositories configured"
 	# Sets that the container has been configured.
 	touch ${NEXUS_DATA}/configured.lock
 fi

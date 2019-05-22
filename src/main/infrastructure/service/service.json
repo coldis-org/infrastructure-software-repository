@@ -1,25 +1,43 @@
 {
-	"id": "software-repository-service",
+	"id": "infrastructure-software-repository-service",
 	"container": {
 		"portMappings": [
 			{
 				"containerPort": 8081,
 				"labels": {
-					"VIP_0": "/software-repository-service:8081"
+					"VIP_0": "/infrastructure-software-repository-service:8081"
+				}
+			},
+			{
+				"containerPort": 18444,
+				"labels": {
+					"VIP_0": "/infrastructure-software-repository-service:18444"
+				}
+			},
+			{
+				"containerPort": 18443,
+				"labels": {
+					"VIP_0": "/infrastructure-software-repository-service:18443"
 				}
 			}
 		],
 		"type": "MESOS",
 		"volumes": [
 			{
-				"containerPath": "persistent-data",
+				"containerPath": "/nexus-data",
+				"hostPath": "nexus_data",
+				"mode": "RW"
+			},
+			{
+				"containerPath": "nexus_data",
 				"mode": "RW",
 				"external": {
-					"size": 128,
-					"name": "software-repository-service-data",
+					"name": "infrastructure-software-repository-service-data",
 					"provider": "dvdi",
+					"size": 300,
 					"options": {
-						"dvdi/driver": "rexray"
+						"dvdi/driver": "rexray",
+						"dvdi/volumetype": "standard"
 					}
 				}
 			}
@@ -31,9 +49,9 @@
 	},
 	"args": [],
 	"cpus": 0.5,
-	"disk": 1024,
+	"disk": 2048,
 	"instances": 1,
-	"mem": 2048,
+	"mem": 1024,
 	"networks": [
 		{
 			"mode": "container/bridge"
