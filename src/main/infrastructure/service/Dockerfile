@@ -1,5 +1,5 @@
 # From Nexus image.
-FROM sonatype/nexus3:3.16.0
+FROM sonatype/nexus3:3.16.1
 
 # Sets the current user to root.
 USER root
@@ -15,10 +15,11 @@ RUN yum update -y && \
 	rm -rf /var/cache/yum
 
 # Copies the scripts.
-RUN mkdir -p /opt/nexus-script
-COPY script /opt/nexus-script
-RUN chown -R nexus:nexus /opt/nexus-script && \
-	ln -s /opt/nexus-script/*.sh /usr/bin && \
+ENV NEXUS_SCRIPT=/opt/nexus-script
+RUN mkdir -p ${NEXUS_SCRIPT}
+COPY script ${NEXUS_SCRIPT}
+RUN chown -R nexus:nexus ${NEXUS_SCRIPT} && \
+	ln -s ${NEXUS_SCRIPT}/*.sh /usr/bin && \
 	for f in /usr/bin/nexus*.sh; \
 	do \
 		chown nexus:nexus $f && \	
@@ -30,7 +31,6 @@ USER nexus
 
 # Sets configuration.
 ENV INSTALL4J_ADD_VM_PARAMS="-Xms128m -Xmx2g -XX:MaxDirectMemorySize=3g -Xincgc"
-ENV NEXUS_DATA=persistent-data
 
 # Entrypoint.
 ENTRYPOINT [ "nexus_init" ]
