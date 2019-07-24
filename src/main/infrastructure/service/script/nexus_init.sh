@@ -4,19 +4,14 @@
 set -o errexit
 #set -o pipefail
 
-# Debug is disabled by default.
-if ${DEBUG}
-then
-	DEBUG=true
-	DEBUG_OPT=--debug
-else 
-	DEBUG=false
-	DEBUG_OPT=
-fi
-
 # Default parameters.
+DEBUG=false
+DEBUG_OPT=
+FORCE_CONFIGURATION=false
+FORCE_CONFIGURATION_OPT=
+START_POOLING_INTERVAL=15
+START_POOLING_RETRIES=20
 NEXUS_SCRIPT=/opt/nexus-script
-STARTUP_WAIT=180
 
 # For each argument.
 while :; do
@@ -28,15 +23,22 @@ while :; do
 			DEBUG_OPT="--debug"
 			;;
 
-		# Startup wait.
-		-w|startup-wait)
-			STARTUP_WAIT=${2}
+		# Force the repository to be configured.
+		-c|--force-configuration)
+			FORCE_CONFIGURATION=true
+			FORCE_CONFIGURATION_OPT=--force-configuration
+			;;
+
+		# Start pooling interval.
+		-p|--start-pooling-interval)
+			START_POOLING_INTERVAL=${2}
 			shift
 			;;
 
-		# Other option.
-		?*)
-			printf 'WARN: Unknown option (ignored): %s\n' "$1" >&2
+		# Start pooling interval.
+		-r|--start-pooling-retries)
+			START_POOLING_RETRIES=${2}
+			shift
 			;;
 
 		# No more options.
@@ -55,29 +57,20 @@ trap - INT TERM
 
 # Print arguments if on debug mode.
 ${DEBUG} && echo  "Running 'nexus_init'"
+${DEBUG} && echo "FORCE_CONFIGURATION=${FORCE_CONFIGURATION}"
+${DEBUG} && echo "START_POOLING_INTERVAL=${START_POOLING_INTERVAL}"
+${DEBUG} && echo "START_POOLING_RETRIES=${START_POOLING_RETRIES}"
 
 # Starts job control.
 set -m
 
-# Executes the init script in the background.
-${DEBUG} && echo "Nexus data at ${NEXUS_DATA}"
-${DEBUG} && echo "${SONATYPE_DIR}/start-nexus-repository-manager.sh &"
-exec ${SONATYPE_DIR}/start-nexus-repository-manager.sh &
+# Runs the config in the backgrond.
+nexus_configure ${DEBUG_OPT} ${FORCE_CONFIGURATION_OPT} \
+	--start-pooling-interval ${START_POOLING_INTERVAL} \
+	--start-pooling-retries ${START_POOLING_RETRIES} \
+	&
 
-# If the container has not been configured yet.
-if ! [ -f ${NEXUS_DATA}/configured.lock ]
-then
-	${DEBUG} && echo "Container not configured yet. Configuring..."
-	# Startup wait.
-	sleep ${STARTUP_WAIT}
-	# Configures the repositories.
-	nexus_run_script ${DEBUG_OPT} -n nexusConfigureRepositories -f ${NEXUS_SCRIPT}/groovy/nexusConfigureRepositories.groovy
-	${DEBUG} && echo "Repositories configured"
-	# Sets that the container has been configured.
-	touch ${NEXUS_DATA}/configured.lock
-fi
-
-# Gets the nexus service back to foreground.
-${DEBUG} && echo "Joining back the main process"
-fg
+# Executes the main process.
+${DEBUG} && echo "${SONATYPE_DIR}/start-nexus-repository-manager.sh"
+exec ${SONATYPE_DIR}/start-nexus-repository-manager.sh
 

@@ -21,23 +21,16 @@
 				}
 			}
 		],
-		"type": "MESOS",
+		"type": "DOCKER",
 		"volumes": [
 			{
 				"containerPath": "/nexus-data",
-				"hostPath": "nexus_data",
-				"mode": "RW"
-			},
-			{
-				"containerPath": "nexus_data",
 				"mode": "RW",
 				"external": {
 					"name": "infrastructure-software-repository-service-data",
 					"provider": "dvdi",
-					"size": 300,
 					"options": {
-						"dvdi/driver": "rexray",
-						"dvdi/volumetype": "standard"
+						"dvdi/driver": "rexray"
 					}
 				}
 			}
@@ -58,3 +51,4 @@
 		}
 	]
 }
+

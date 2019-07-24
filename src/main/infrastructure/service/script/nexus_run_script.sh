@@ -12,7 +12,7 @@ DEBUG_OPT=
 NEXUS_SCRIPT=/opt/nexus-script
 HOST=http://localhost:8081
 USERNAME=admin
-PASSWORD=admin123
+PASSWORD=`cat ${NEXUS_DATA}/admin.password`
 
 # For each argument.
 while :; do
@@ -68,10 +68,11 @@ set -o nounset
 trap - INT TERM
 
 # Print arguments if on debug mode.
-${DEBUG} && echo  "Running 'nexus_run_script'"
-${DEBUG} && echo  "USERNAME=${USERNAME}"
-${DEBUG} && echo  "SCRIPT_NAME=${SCRIPT_NAME}"
-${DEBUG} && echo  "SCRIPT_FILE=${SCRIPT_FILE}"
+${DEBUG} && echo "Running 'nexus_run_script'"
+${DEBUG} && echo "USERNAME=${USERNAME}"
+${DEBUG} && echo "PASSWORD=${PASSWORD}"
+${DEBUG} && echo "SCRIPT_NAME=${SCRIPT_NAME}"
+${DEBUG} && echo "SCRIPT_FILE=${SCRIPT_FILE}"
 
 # Creates the script.
 groovy -Dgroovy.grape.report.downloads=true -Dgrape.config=${NEXUS_SCRIPT}/nexusGrapeConfig.xml ${NEXUS_SCRIPT}/groovy/nexusAddUpdateScript.groovy -u "${USERNAME}" -p "${PASSWORD}" -n "${SCRIPT_NAME}" -f "${SCRIPT_FILE}" -h "${HOST}"
