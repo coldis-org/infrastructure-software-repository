@@ -22,7 +22,7 @@
 		<project.config.assembly.phase>package</project.config.assembly.phase>
 		<project.config.assembly.descriptors>infrastructure/service/distribution.xml</project.config.assembly.descriptors>
 
-		<nx-version>3.16.1-02</nx-version>
+		<nx-version>3.22.0-02</nx-version>
 
 	</properties>
 
