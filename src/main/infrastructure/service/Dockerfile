@@ -1,5 +1,5 @@
 # From Nexus image.
-FROM sonatype/nexus3:3.17.0
+FROM sonatype/nexus3:3.27.0
 
 # Sets the current user to root.
 USER root
@@ -11,7 +11,12 @@ ENV TZ=America/Sao_Paulo
 
 # Installs groovy.
 RUN yum update -y && \
-	yum install -y groovy curl && \
+	yum install -y curl zip unzip && \
+	curl -s get.sdkman.io | bash && \
+	source "/root/.sdkman/bin/sdkman-init.sh" && \
+	yes | /bin/bash -l -c 'sdk install groovy' && \
+	rm -R /root/.sdkman && \
+	yum remove -y --skip-broken zip unzip && \
 	rm -rf /var/cache/yum
 
 # Copies scripts.
