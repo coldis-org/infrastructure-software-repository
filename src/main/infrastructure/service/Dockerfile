@@ -1,5 +1,5 @@
 # From Nexus image.
-FROM sonatype/nexus3:3.37.3
+FROM sonatype/nexus3:3.72.0
 
 # Sets the current user to root.
 USER root
