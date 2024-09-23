@@ -1,5 +1,5 @@
 # From Nexus image.
-FROM sonatype/nexus3:3.37.3
+FROM sonatype/nexus3:3.68.1
 
 # Sets the current user to root.
 USER root
@@ -10,14 +10,14 @@ RUN mv /etc/localtime /etc/localtime.bak && \
 ENV TZ=America/Sao_Paulo
 
 # Installs groovy.
-RUN yum update -y && \
-	yum install -y curl zip unzip && \
-	curl -s get.sdkman.io | bash && \
-	source "/root/.sdkman/bin/sdkman-init.sh" && \
+RUN microdnf update -y && \
+	microdnf install -y curl zip unzip sed && \
+	curl -s https://get.sdkman.io | bash && \
+	source "$HOME/.sdkman/bin/sdkman-init.sh" && \
 	yes | /bin/bash -l -c 'sdk install groovy' && \
 	rm -R /root/.sdkman && \
-	yum remove -y --skip-broken zip unzip && \
-	rm -rf /var/cache/yum
+	microdnf remove -y zip unzip && \
+	microdnf clean all
 
 # Copies scripts.
 ENV NEXUS_SCRIPT=/opt/nexus-script
