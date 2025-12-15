@@ -1,17 +1,17 @@
 # From Nexus image.
-FROM sonatype/nexus3:3.72.0-java17
+FROM sonatype/nexus3:3.86.2-java17-ubi
 
 # Sets the current user to root.
 USER root
 
 # Sets localtime timezone.
-RUN mv /etc/localtime /etc/localtime.bak && \
-	ln -s /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
+RUN ln -s /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime
 ENV TZ=America/Sao_Paulo
 
 # Installs groovy.
 RUN microdnf update -y && \
-	microdnf install -y curl zip unzip sed && \
+	microdnf install -y zip unzip sed ca-certificates openssl && \
+    update-ca-trust && \
 	curl -s https://get.sdkman.io | bash && \
 	source "$HOME/.sdkman/bin/sdkman-init.sh" && \
 	yes | /bin/bash -l -c 'sdk install groovy' && \
@@ -19,7 +19,7 @@ RUN microdnf update -y && \
 	microdnf remove -y zip unzip && \
 	microdnf clean all
 
-# Copies scripts.
+	# Copies scripts.
 ENV NEXUS_SCRIPT=/opt/nexus-script
 RUN mkdir -p ${NEXUS_SCRIPT}
 COPY script ${NEXUS_SCRIPT}
